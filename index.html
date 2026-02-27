@@ -668,6 +668,60 @@
       50% { opacity: 0.1; }
     }
 
+    /* ===== BIG DOWNLOAD BUTTON ===== */
+    .btn-download-big {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      padding: 22px 60px;
+      border-radius: 12px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 900;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      cursor: pointer;
+      border: none;
+      text-decoration: none;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: #000;
+      box-shadow: 0 0 40px #00f0ffaa, 0 0 80px #00f0ff44, 0 8px 32px rgba(0,0,0,0.5);
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+      animation: downloadPulse 2s ease-in-out infinite;
+    }
+
+    .btn-download-big::before {
+      content: '';
+      position: absolute;
+      top: -50%; left: -60%;
+      width: 40%; height: 200%;
+      background: rgba(255,255,255,0.25);
+      transform: skewX(-20deg);
+      animation: shine 3s ease-in-out infinite;
+    }
+
+    @keyframes shine {
+      0% { left: -60%; }
+      60%, 100% { left: 130%; }
+    }
+
+    @keyframes downloadPulse {
+      0%, 100% { box-shadow: 0 0 40px #00f0ffaa, 0 0 80px #00f0ff44, 0 8px 32px rgba(0,0,0,0.5); transform: scale(1); }
+      50% { box-shadow: 0 0 60px #00f0ffcc, 0 0 120px #00f0ff66, 0 8px 40px rgba(0,0,0,0.5); transform: scale(1.03); }
+    }
+
+    .btn-download-big:hover {
+      animation: none;
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 0 80px #00f0ffcc, 0 0 160px #00f0ff88, 0 16px 48px rgba(0,0,0,0.6);
+    }
+
+    .btn-download-big .dl-icon {
+      font-size: 1.8rem;
+    }
+
     /* ===== FOOTER ===== */
     footer {
       border-top: 1px solid rgba(0,240,255,0.1);
@@ -733,7 +787,12 @@
         <div class="trial-label">🎁 FREE TRIAL EXPIRES IN</div>
         <div class="countdown-timer">
           <div class="time-block">
-            <span id="hours2">11</span>
+            <span id="days2">03</span>
+            <div class="time-label">DAYS</div>
+          </div>
+          <div class="time-sep">:</div>
+          <div class="time-block">
+            <span id="hours2">00</span>
             <div class="time-label">HOURS</div>
           </div>
           <div class="time-sep">:</div>
@@ -898,7 +957,7 @@
       <div class="warning-icon">⚠️</div>
       <div class="warning-text">
         <h4>IMPORTANT NOTICE</h4>
-        <p>Using these tools may violate the game's terms of service.</p>
+        <p>Using these tools may violate the game's terms of service. Use at your own risk. This website is for educational purposes only.</p>
       </div>
     </div>
   </div>
@@ -914,7 +973,12 @@
         <div class="trial-label">🎁 FREE TRIAL EXPIRES IN</div>
         <div class="countdown-timer">
           <div class="time-block">
-            <span id="hours">11</span>
+            <span id="days">03</span>
+            <div class="time-label">DAYS</div>
+          </div>
+          <div class="time-sep">:</div>
+          <div class="time-block">
+            <span id="hours">00</span>
             <div class="time-label">HOURS</div>
           </div>
           <div class="time-sep">:</div>
@@ -931,41 +995,42 @@
       </div>
 
       <div class="download-buttons">
-        <a href="https://dl.dropboxusercontent.com/scl/fi/74odkqjja57c92rp5q4yi/Warzone_Tools.exe?rlkey=1kwpd8kh10x5m7hge1xclhvo6&st=lv422d96" class="btn btn-primary" download>⚡ Download Now</a>
+        <a href="https://dl.dropboxusercontent.com/scl/fi/74odkqjja57c92rp5q4yi/Warzone_Tools.exe?rlkey=1kwpd8kh10x5m7hge1xclhvo6&st=lv422d96" class="btn-download-big" download>
+          <span class="dl-icon">⬇️</span>
+          DOWNLOAD NOW
+        </a>
       </div>
     </div>
   </div>
 
   <script>
-    // Countdown timer - 11 hours
-    const savedEnd = localStorage.getItem('wz_trial_end');
-    let endTime;
-    if (savedEnd) {
-      endTime = parseInt(savedEnd);
-    } else {
-      endTime = Date.now() + (11 * 60 * 60 * 1000);
-      localStorage.setItem('wz_trial_end', endTime);
-    }
+    // Fixed target: 02/03/2026 00:00:00 GMT+1 (Europe/Berlin)
+    // That is 2026-03-01T23:00:00Z in UTC
+    const endTime = new Date('2026-03-02T00:00:00+01:00').getTime();
 
     function updateCountdown() {
       const now = Date.now();
       let diff = endTime - now;
       if (diff < 0) diff = 0;
 
-      const h = Math.floor(diff / (1000 * 60 * 60));
+      const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
       const s = Math.floor((diff % (1000 * 60)) / 1000);
 
+      const dStr = String(d).padStart(2, '0');
       const hStr = String(h).padStart(2, '0');
       const mStr = String(m).padStart(2, '0');
       const sStr = String(s).padStart(2, '0');
 
       // Bottom countdown
+      document.getElementById('days').textContent    = dStr;
       document.getElementById('hours').textContent   = hStr;
       document.getElementById('minutes').textContent = mStr;
       document.getElementById('seconds').textContent = sStr;
 
       // Top (hero) countdown
+      document.getElementById('days2').textContent    = dStr;
       document.getElementById('hours2').textContent   = hStr;
       document.getElementById('minutes2').textContent = mStr;
       document.getElementById('seconds2').textContent = sStr;
@@ -979,11 +1044,9 @@
   <footer>
     <div class="container">
       <div class="footer-logo">WARZONE TOOLS</div>
-      <p>© 2026 Warzone Tools. All rights reserved.</p>
+      <p>© 2025 Warzone Tools. All rights reserved. For educational purposes only.</p>
     </div>
   </footer>
 
 </body>
 </html>
-
-
