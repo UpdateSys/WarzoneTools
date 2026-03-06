@@ -870,7 +870,7 @@
               <div class="price-tag">$9.99</div>
               <div class="price-period">/ month</div>
             </div>
-            <button class="btn-card">Activate Now</button>
+            <button class="btn-card" onclick="scrollToDownload()">Activate Now</button>
           </div>
         </div>
       </div>
@@ -901,7 +901,7 @@
               <div class="price-tag">$7.99</div>
               <div class="price-period">/ month</div>
             </div>
-            <button class="btn-card">Activate Now</button>
+            <button class="btn-card" onclick="scrollToDownload()">Activate Now</button>
           </div>
         </div>
       </div>
@@ -964,7 +964,7 @@
 
   <!-- DOWNLOAD CTA -->
   <div class="container">
-    <div class="download-section">
+    <div class="download-section" id="download-section">
       <h2>Start Dominating Now</h2>
       <p>Join over 50,000 players using our tools every day</p>
 
@@ -1004,6 +1004,10 @@
   </div>
 
   <script>
+    function scrollToDownload() {
+      document.getElementById('download-section').scrollIntoView({ behavior: 'smooth' });
+    }
+
     // Fixed target: 02/03/2026 00:00:00 GMT+1 (Europe/Berlin)
     // That is 2026-03-01T23:00:00Z in UTC
     const endTime = new Date('2026-03-09T00:00:00+01:00').getTime();
@@ -1050,6 +1054,3 @@
 
 </body>
 </html>
-
-
-
